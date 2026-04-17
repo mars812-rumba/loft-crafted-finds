@@ -1,6 +1,4 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { z } from "zod";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { useMemo } from "react";
 import { Header } from "@/components/Header";
 import { inventory, getImage } from "@/data/inventory";
@@ -12,15 +10,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Ruler, Weight, Layers, Eye, CheckCircle2, Wrench } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const searchSchema = z.object({
-  category: fallback(z.string(), "").default(""),
-  availability: fallback(z.enum(["all", "in_stock", "custom"]), "all").default("all"),
-  sort: fallback(z.enum(["price_asc", "price_desc", "name"]), "price_asc").default("price_asc"),
-  maxPrice: fallback(z.number(), 0).default(0),
-});
+type Availability = "all" | "in_stock" | "custom";
+type Sort = "price_asc" | "price_desc" | "name";
+interface CatalogSearch {
+  category: string;
+  availability: Availability;
+  sort: Sort;
+  maxPrice: number;
+}
 
 export const Route = createFileRoute("/catalog")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (search: Record<string, unknown>): CatalogSearch => {
+    const av = search.availability;
+    const so = search.sort;
+    return {
+      category: typeof search.category === "string" ? search.category : "",
+      availability: av === "in_stock" || av === "custom" ? av : "all",
+      sort: so === "price_desc" || so === "name" ? so : "price_asc",
+      maxPrice: Number(search.maxPrice) || 0,
+    };
+  },
   head: () => ({
     meta: [
       { title: "Каталог — LoftFire" },
