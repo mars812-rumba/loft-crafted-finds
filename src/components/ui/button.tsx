@@ -16,6 +16,10 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        ember:
+          "bg-ember text-ember-foreground shadow-md hover:brightness-110 transition-all",
+        hero:
+          "bg-[image:var(--gradient-ember)] text-ember-foreground shadow-lg hover:brightness-110 transition-all font-semibold",
       },
       size: {
         default: "h-9 px-4 py-2",
