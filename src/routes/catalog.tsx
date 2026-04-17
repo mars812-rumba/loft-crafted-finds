@@ -49,8 +49,9 @@ function CatalogPage() {
     return list;
   }, [category, availability, sort, maxPrice]);
 
-  const update = (patch: Partial<{ category: string; availability: "all" | "in_stock" | "custom"; sort: "price_asc" | "price_desc" | "name"; maxPrice: number }>) => {
-    navigate({ search: (prev) => ({ ...prev, ...patch }) });
+  type SearchState = { category: string; availability: "all" | "in_stock" | "custom"; sort: "price_asc" | "price_desc" | "name"; maxPrice: number };
+  const update = (patch: Partial<SearchState>) => {
+    navigate({ search: (prev: SearchState) => ({ ...prev, ...patch }) });
   };
 
   const cat = categoryById(category);
